@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Exit script on error
+set -e
+
+# Check if Maven is installed
+if ! command -v mvn &> /dev/null; then
+    echo "Maven could not be found. Please install Maven."
+    exit 1
+fi
+
+# Build the project using Maven
+echo "Building the project using Maven..."
+mvn clean install
+
+# Run the Spring Boot application
+echo "Starting the Spring Boot application..."
+
+# Run the Spring Boot application (ensure the JAR file exists in the target directory)
+if [ -f "message-board-rest-api/target/message-board-rest-api-1.0.0.jar" ]; then
+    java -Dserver.port=8080 -jar message-board-rest-api/target/message-board-rest-api-1.0.0.jar
+    echo "Service started successfully at http://localhost:8080"
+else
+    echo "JAR file not found. Please check the build process."
+    exit 1
+fi
